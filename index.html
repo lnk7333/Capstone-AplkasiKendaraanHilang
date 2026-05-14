@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SafeRide Alert - Prototype</title>
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      body {
+        background: #f3f4f6;
+        color: #111827;
+        line-height: 1.6;
+      }
+
+      .hero {
+        background: #dc2626;
+        color: white;
+        padding: 60px 24px;
+      }
+
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+
+      h1 {
+        font-size: 42px;
+        margin-bottom: 16px;
+      }
+
+      h2 {
+        font-size: 28px;
+        margin-bottom: 24px;
+      }
+
+      p {
+        margin-bottom: 12px;
+      }
+
+      .hero p {
+        font-size: 18px;
+        max-width: 720px;
+      }
+
+      .button-group {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+      }
+
+      .btn {
+        border: none;
+        padding: 14px 22px;
+        border-radius: 14px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 15px;
+      }
+
+      .btn-light {
+        background: white;
+        color: #dc2626;
+      }
+
+      .btn-dark {
+        background: #111827;
+        color: white;
+      }
+
+      .btn-red {
+        background: #dc2626;
+        color: white;
+        width: 100%;
+        margin-top: 12px;
+        font-size: 17px;
+      }
+
+      section {
+        padding: 48px 24px;
+      }
+
+      .card {
+        background: white;
+        border-radius: 20px;
+        padding: 24px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        font-size: 15px;
+      }
+
+      textarea {
+        min-height: 100px;
+        resize: vertical;
+      }
+
+      .upload-box {
+        border: 2px dashed #d1d5db;
+        background: #f9fafb;
+        padding: 32px;
+        border-radius: 16px;
+        text-align: center;
+        color: #6b7280;
+      }
+
+      .alert-card {
+        background: #fef2f2;
+        border-left: 8px solid #dc2626;
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+      }
+
+      .alert-title {
+        font-weight: bold;
+        color: #b91c1c;
+        font-size: 18px;
+        margin-bottom: 12px;
+      }
+
+      .footer {
+        background: #111827;
+        color: white;
+        text-align: center;
+        padding: 28px 24px;
+      }
+
+      .hidden {
+        display: none;
+      }
+
+      @media (max-width: 600px) {
+        h1 {
+          font-size: 34px;
+        }
+
+        h2 {
+          font-size: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <h1>SafeRide Alert</h1>
+        <p>Prototype aplikasi notifikasi kehilangan kendaraan berbasis lokasi dan real-time untuk membantu pengguna melaporkan kehilangan dan memberi peringatan kepada warga sekitar.</p>
+
+        <div class="button-group">
+          <a href="#lapor"><button class="btn btn-light">Laporkan Kehilangan</button></a>
+          <a href="#alert"><button class="btn btn-dark">Lihat Demo Alert</button></a>
+        </div>
+      </div>
+    </header>
+
+    <section id="lapor">
+      <div class="container">
+        <h2>Form Laporan Kehilangan</h2>
+
+        <div class="card">
+          <form id="reportForm">
+            <div class="form-group">
+              <label for="jenis">Jenis Kendaraan</label>
+              <select id="jenis">
+                <option>Motor</option>
+                <option>Mobil</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="merk">Merk / Tipe Kendaraan</label>
+              <input type="text" id="merk" placeholder="Contoh: Honda Beat Hitam" />
+            </div>
+
+            <div class="form-group">
+              <label for="nopol">Nomor Polisi</label>
+              <input type="text" id="nopol" placeholder="Contoh: L 1234 AB" />
+            </div>
+
+            <div class="form-group">
+              <label for="lokasi">Lokasi Kehilangan</label>
+              <input type="text" id="lokasi" placeholder="Contoh: Parkiran Kampus ITS" />
+            </div>
+
+            <div class="form-group">
+              <label for="waktu">Waktu Kehilangan</label>
+              <input type="datetime-local" id="waktu" />
+            </div>
+
+            <div class="form-group">
+              <label for="deskripsi">Deskripsi Tambahan</label>
+              <textarea id="deskripsi" placeholder="Tambahkan ciri kendaraan atau kronologi singkat"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label>Upload Foto Kendaraan</label>
+              <div class="upload-box">Klik untuk upload foto kendaraan</div>
+            </div>
+
+            <button type="submit" class="btn btn-red">Kirim Alert Kehilangan</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section id="alert">
+      <div class="container">
+        <h2>Demo Alert untuk Pengguna Sekitar</h2>
+
+        <div class="alert-card" id="alertCard">
+          <div class="alert-title">🚨 Kehilangan Kendaraan Terdekat</div>
+          <p><strong>Motor:</strong> Honda Beat Hitam</p>
+          <p><strong>Nomor Polisi:</strong> L 1234 AB</p>
+          <p><strong>Lokasi:</strong> Parkiran Kampus ITS</p>
+          <p><strong>Waktu:</strong> 10 menit yang lalu</p>
+          <p><strong>Radius Alert:</strong> 500 meter</p>
+          <button class="btn btn-red" onclick="showResponse()">Saya Melihat Sesuatu</button>
+        </div>
+
+        <div class="card hidden" id="responseBox" style="margin-top: 20px">
+          <h2>Respons Saksi</h2>
+          <div class="form-group">
+            <label for="infoSaksi">Informasi yang Dilihat</label>
+            <textarea id="infoSaksi" placeholder="Contoh: Saya melihat motor serupa menuju gerbang utara"></textarea>
+          </div>
+          <button class="btn btn-red" onclick="sendResponse()">Kirim Informasi</button>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p><strong>SafeRide Alert MVP</strong></p>
+      <p>Prototype siap digunakan untuk uji coba awal kepada pengguna.</p>
+    </footer>
+
+    <script>
+      const form = document.getElementById("reportForm");
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        alert("Alert kehilangan berhasil dikirim ke pengguna sekitar lokasi.");
+        document.getElementById("alert").scrollIntoView({ behavior: "smooth" });
+      });
+
+      function showResponse() {
+        document.getElementById("responseBox").classList.remove("hidden");
+        document.getElementById("responseBox").scrollIntoView({ behavior: "smooth" });
+      }
+
+      function sendResponse() {
+        alert("Informasi saksi berhasil dikirim kepada pelapor.");
+      }
+    </script>
+  </body>
+</html>
