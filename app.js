@@ -155,23 +155,41 @@ function manipulasiUIRealtime(dataZona) {
 // Melodi Sirine Naik-Turun Lembut Menggunakan Web Audio API
 function bunyikanSirineLembut() {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-
-    osc.type = "sine"; 
-    osc.frequency.setValueAtTime(440, ctx.currentTime); 
     
-    // Alur frekuensi sirine agar bergulir naik turun secara estetik
-    osc.frequency.linearRampToValueAtTime(750, ctx.currentTime + 0.3);
-    osc.frequency.linearRampToValueAtTime(440, ctx.currentTime + 0.6);
-    osc.frequency.linearRampToValueAtTime(750, ctx.currentTime + 0.9);
+    // Kita pakai 2 Oscillator sekaligus untuk efek suara bising/distorsi ala alarm nyata
+    const osc1 = ctx.createOscillator();
+    const osc2 = ctx.createOscillator();
+    const gainNode = ctx.createGain();
 
-    gain.gain.setValueAtTime(0.25, ctx.currentTime); // Volume 25% biar tidak pecah di speaker
-    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.2); 
+    // Jenis gelombang agresif untuk menembus fokus manusia
+    osc1.type = "sawtooth"; 
+    osc2.type = "square"; 
 
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+    // Frekuensi dasar (Tinggi dan menusuk)
+    osc1.frequency.setValueAtTime(900, ctx.currentTime);
+    osc2.frequency.setValueAtTime(450, ctx.currentTime);
+    
+    // Modulasi Sirine Cepat (Efek Wi-Wu-Wi-Wu yang sangat cepat/agresif)
+    for (let i = 0; i < 3; i++) {
+        let timeOffset = i * 0.4;
+        osc1.frequency.linearRampToValueAtTime(1200, ctx.currentTime + timeOffset + 0.2);
+        osc1.frequency.linearRampToValueAtTime(800, ctx.currentTime + timeOffset + 0.4);
+        
+        osc2.frequency.linearRampToValueAtTime(600, ctx.currentTime + timeOffset + 0.2);
+        osc2.frequency.linearRampToValueAtTime(300, ctx.currentTime + timeOffset + 0.4);
+    }
 
-    osc.start();
-    osc.stop(ctx.currentTime + 1.2);
+    // Naikkan volume ke tingkat siaga (0.6 = 60% volume)
+    gainNode.gain.setValueAtTime(0.6, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5); // Efek memudar tajam di akhir
+
+    osc1.connect(gainNode);
+    osc2.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    osc1.start();
+    osc2.start();
+    
+    osc1.stop(ctx.currentTime + 1.5);
+    osc2.stop(ctx.currentTime + 1.5);
 }
