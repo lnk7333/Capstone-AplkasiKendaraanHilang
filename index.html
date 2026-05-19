@@ -1,279 +1,103 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SafeRide Alert - Prototype</title>
-    <style>
-      * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
-      }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TheftAlert - Live MVP</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-gray-100 text-gray-900 transition-colors duration-500" id="bodyApp">
 
-      body {
-        background: #f3f4f6;
-        color: #111827;
-        line-height: 1.6;
-      }
-
-      .hero {
-        background: #dc2626;
-        color: white;
-        padding: 60px 24px;
-      }
-
-      .container {
-        max-width: 900px;
-        margin: 0 auto;
-      }
-
-      h1 {
-        font-size: 42px;
-        margin-bottom: 16px;
-      }
-
-      h2 {
-        font-size: 28px;
-        margin-bottom: 24px;
-      }
-
-      p {
-        margin-bottom: 12px;
-      }
-
-      .hero p {
-        font-size: 18px;
-        max-width: 720px;
-      }
-
-      .button-group {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        margin-top: 24px;
-      }
-
-      .btn {
-        border: none;
-        padding: 14px 22px;
-        border-radius: 14px;
-        font-weight: bold;
-        cursor: pointer;
-        font-size: 15px;
-      }
-
-      .btn-light {
-        background: white;
-        color: #dc2626;
-      }
-
-      .btn-dark {
-        background: #111827;
-        color: white;
-      }
-
-      .btn-red {
-        background: #dc2626;
-        color: white;
-        width: 100%;
-        margin-top: 12px;
-        font-size: 17px;
-      }
-
-      section {
-        padding: 48px 24px;
-      }
-
-      .card {
-        background: white;
-        border-radius: 20px;
-        padding: 24px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-      }
-
-      .form-group {
-        margin-bottom: 18px;
-      }
-
-      label {
-        display: block;
-        font-weight: bold;
-        margin-bottom: 8px;
-      }
-
-      input,
-      select,
-      textarea {
-        width: 100%;
-        padding: 13px;
-        border: 1px solid #d1d5db;
-        border-radius: 12px;
-        font-size: 15px;
-      }
-
-      textarea {
-        min-height: 100px;
-        resize: vertical;
-      }
-
-      .upload-box {
-        border: 2px dashed #d1d5db;
-        background: #f9fafb;
-        padding: 32px;
-        border-radius: 16px;
-        text-align: center;
-        color: #6b7280;
-      }
-
-      .alert-card {
-        background: #fef2f2;
-        border-left: 8px solid #dc2626;
-        border-radius: 18px;
-        padding: 24px;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-      }
-
-      .alert-title {
-        font-weight: bold;
-        color: #b91c1c;
-        font-size: 18px;
-        margin-bottom: 12px;
-      }
-
-      .footer {
-        background: #111827;
-        color: white;
-        text-align: center;
-        padding: 28px 24px;
-      }
-
-      .hidden {
-        display: none;
-      }
-
-      @media (max-width: 600px) {
-        h1 {
-          font-size: 34px;
-        }
-
-        h2 {
-          font-size: 24px;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <header class="hero">
-      <div class="container">
-        <h1>SafeRide Alert</h1>
-        <p>Prototype aplikasi notifikasi kehilangan kendaraan berbasis lokasi dan real-time untuk membantu pengguna melaporkan kehilangan dan memberi peringatan kepada warga sekitar.</p>
-
-        <div class="button-group">
-          <a href="#lapor"><button class="btn btn-light">Laporkan Kehilangan</button></a>
-          <a href="#alert"><button class="btn btn-dark">Lihat Demo Alert</button></a>
+    <header class="bg-red-600 text-white py-12 px-6 transition-colors duration-500" id="heroHeader">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-4xl font-black mb-3 tracking-wide">TheftAlert</h1>
+            <p class="text-lg text-red-100 max-w-2xl">Sistem Peringatan Dini Kehilangan Kendaraan Berbasis Lokasi secara Real-Time untuk Memobilisasi Pengawasan Kolektif Kampus.</p>
+            
+            <div class="flex gap-3 mt-6 flex-wrap">
+                <a href="#lapor" class="bg-white text-red-600 font-bold px-5 py-3 rounded-xl shadow hover:bg-red-50 transition active:scale-95">Aksi Darurat (SOS)</a>
+                <a href="#alert" class="bg-slate-900 text-white font-bold px-5 py-3 rounded-xl shadow hover:bg-slate-800 transition active:scale-95">Area Monitoring</a>
+            </div>
         </div>
-      </div>
     </header>
 
-    <section id="lapor">
-      <div class="container">
-        <h2>Form Laporan Kehilangan</h2>
+    <main class="max-w-4xl mx-auto p-6 space-y-12">
 
-        <div class="card">
-          <form id="reportForm">
-            <div class="form-group">
-              <label for="jenis">Jenis Kendaraan</label>
-              <select id="jenis">
-                <option>Motor</option>
-                <option>Mobil</option>
-              </select>
+        <section id="lapor" class="scroll-mt-6">
+            <h2 class="text-2xl font-black mb-4 flex items-center gap-2">🚨 Panel Darurat Korban</h2>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <div class="space-y-4">
+                    <div class="bg-gray-50 p-4 rounded-xl border border-gray-200">
+                        <span class="text-xs font-bold text-gray-400 uppercase tracking-wider block mb-1">Identitas Kendaraan Terkunci</span>
+                        <p class="text-xl font-black text-gray-800">Honda Beat Hitam</p>
+                        <p class="text-sm text-gray-600 font-medium mt-1">Nomor Polisi: <span class="bg-gray-200 px-2 py-0.5 rounded font-mono">L 1234 AB</span></p>
+                        <p class="text-xs text-gray-400 mt-2">Terdaftar atas nama: Shafly Hidayatullah (USR001)</p>
+                    </div>
+                    <p class="text-xs text-gray-500 italic leading-relaxed">
+                        *Anda tidak perlu mengisi detail kendaraan saat panik. Cukup pilih lokasi dan tulis deskripsi singkat di sebelah kanan, lalu tekan tombol SOS.
+                    </p>
+                </div>
+
+                <form id="reportForm" class="space-y-4">
+                    <div>
+                        <label for="selectZona" class="block font-bold text-sm mb-2">Lokasi Terjadi Kehilangan</label>
+                        <select id="selectZona" class="w-full p-3 border border-gray-300 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 font-medium">
+                            <option value="1">Asrama ITS</option>
+                            <option value="2">Kantin Pusat ITS</option>
+                            <option value="3">Gedung SI ITS</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="deskripsi" class="block font-bold text-sm mb-2">Kronologi / Ciri Tambahan (Opsional)</label>
+                        <textarea id="deskripsi" placeholder="Contoh: Helm ink merah dicantolkan di spion, arah lari pelaku ke gerbang luar..." class="w-full p-3 border border-gray-300 rounded-xl min-h-[80px] text-sm focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
+                    </div>
+
+                    <button type="submit" id="btnSos" class="w-full bg-red-600 hover:bg-red-700 text-white font-black py-4 px-6 rounded-xl shadow-md transition transform active:scale-95 text-center block text-lg tracking-wide cursor-pointer">
+                        KIRIM ALERT KEHILANGAN (SOS)
+                    </button>
+                </form>
             </div>
+        </section>
 
-            <div class="form-group">
-              <label for="merk">Merk / Tipe Kendaraan</label>
-              <input type="text" id="merk" placeholder="Contoh: Honda Beat Hitam" />
+        <section id="alert" class="scroll-mt-6">
+            <h2 class="text-2xl font-black mb-4">🛡️ Monitor Radius Saksi Mata</h2>
+            
+            <div id="statusCard" class="bg-white border-l-8 border-green-500 rounded-2xl p-6 shadow-sm transition-all duration-300">
+                <div id="statusText" class="space-y-2">
+                    <h3 class="font-black text-green-700 text-xl flex items-center gap-2">🟢 Status Lingkungan Aman</h3>
+                    <p class="text-gray-600 text-sm">Situasi di sekitar wilayah pemantauan saat ini terpantau aman dan kondusif. Anda akan menerima sinyal darurat secara otomatis jika terjadi insiden.</p>
+                </div>
+
+                <div id="actionSaksiBox" class="hidden mt-6 pt-4 border-t border-red-200 space-y-4">
+                    <button id="btnMelihat" class="bg-red-600 hover:bg-red-700 text-white font-bold px-6 py-3 rounded-xl shadow transition active:scale-95 w-full md:w-auto cursor-pointer">
+                        🙋‍♂️ Saya Melihat Sesuatu / Ada Bukti
+                    </button>
+                    
+                    <div id="responseBox" class="hidden bg-gray-50 p-4 rounded-xl border border-gray-200 space-y-3">
+                        <h4 class="font-bold text-sm text-gray-800">Kirim Informasi Petunjuk ke Korban:</h4>
+                        <textarea id="infoSaksi" placeholder="Contoh: Saya melihat motor dengan nopol tersebut dikendarai orang berjaket hitam ke arah Gerbang Utama baru saja." class="w-full p-3 border border-gray-300 rounded-xl bg-white text-sm focus:outline-none focus:ring-2 focus:ring-red-500"></textarea>
+                        <button id="btnKirimInfo" class="bg-slate-900 text-white font-bold px-4 py-2 rounded-lg text-xs hover:bg-slate-800 transition">
+                            Kirim Petunjuk Real-Time
+                        </button>
+                    </div>
+                </div>
+
+                <button id="btnPulihkan" class="hidden mt-4 w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-2 px-4 rounded-xl text-xs transition">
+                    ⚙️ Reset Status Menjadi Aman Kembali
+                </button>
             </div>
+        </section>
 
-            <div class="form-group">
-              <label for="nopol">Nomor Polisi</label>
-              <input type="text" id="nopol" placeholder="Contoh: L 1234 AB" />
-            </div>
+    </main>
 
-            <div class="form-group">
-              <label for="lokasi">Lokasi Kehilangan</label>
-              <input type="text" id="lokasi" placeholder="Contoh: Parkiran Kampus ITS" />
-            </div>
-
-            <div class="form-group">
-              <label for="waktu">Waktu Kehilangan</label>
-              <input type="datetime-local" id="waktu" />
-            </div>
-
-            <div class="form-group">
-              <label for="deskripsi">Deskripsi Tambahan</label>
-              <textarea id="deskripsi" placeholder="Tambahkan ciri kendaraan atau kronologi singkat"></textarea>
-            </div>
-
-            <div class="form-group">
-              <label>Upload Foto Kendaraan</label>
-              <div class="upload-box">Klik untuk upload foto kendaraan</div>
-            </div>
-
-            <button type="submit" class="btn btn-red">Kirim Alert Kehilangan</button>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <section id="alert">
-      <div class="container">
-        <h2>Demo Alert untuk Pengguna Sekitar</h2>
-
-        <div class="alert-card" id="alertCard">
-          <div class="alert-title">🚨 Kehilangan Kendaraan Terdekat</div>
-          <p><strong>Motor:</strong> Honda Beat Hitam</p>
-          <p><strong>Nomor Polisi:</strong> L 1234 AB</p>
-          <p><strong>Lokasi:</strong> Parkiran Kampus ITS</p>
-          <p><strong>Waktu:</strong> 10 menit yang lalu</p>
-          <p><strong>Radius Alert:</strong> 500 meter</p>
-          <button class="btn btn-red" onclick="showResponse()">Saya Melihat Sesuatu</button>
-        </div>
-
-        <div class="card hidden" id="responseBox" style="margin-top: 20px">
-          <h2>Respons Saksi</h2>
-          <div class="form-group">
-            <label for="infoSaksi">Informasi yang Dilihat</label>
-            <textarea id="infoSaksi" placeholder="Contoh: Saya melihat motor serupa menuju gerbang utara"></textarea>
-          </div>
-          <button class="btn btn-red" onclick="sendResponse()">Kirim Informasi</button>
-        </div>
-      </div>
-    </section>
-
-    <footer class="footer">
-      <p><strong>SafeRide Alert MVP</strong></p>
-      <p>Prototype siap digunakan untuk uji coba awal kepada pengguna.</p>
+    <footer class="bg-slate-900 text-gray-400 text-center py-8 px-4 mt-12 text-sm border-t border-slate-800">
+        <p class="font-bold text-white mb-1">TheftAlert Live MVP v2.0</p>
+        <p>Menggunakan Database Supabase Real-Time Streaming & Tailwind Engine.</p>
     </footer>
 
-    <script>
-      const form = document.getElementById("reportForm");
-
-      form.addEventListener("submit", function (event) {
-        event.preventDefault();
-        alert("Alert kehilangan berhasil dikirim ke pengguna sekitar lokasi.");
-        document.getElementById("alert").scrollIntoView({ behavior: "smooth" });
-      });
-
-      function showResponse() {
-        document.getElementById("responseBox").classList.remove("hidden");
-        document.getElementById("responseBox").scrollIntoView({ behavior: "smooth" });
-      }
-
-      function sendResponse() {
-        alert("Informasi saksi berhasil dikirim kepada pelapor.");
-      }
-    </script>
-  </body>
+    <script src="app.js" defer></script>
+</body>
 </html>
