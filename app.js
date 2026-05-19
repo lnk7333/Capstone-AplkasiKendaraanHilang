@@ -156,40 +156,34 @@ function manipulasiUIRealtime(dataZona) {
 function bunyikanSirineLembut() {
     const ctx = new (window.AudioContext || window.webkitAudioContext)();
     
-    // Kita pakai 2 Oscillator sekaligus untuk efek suara bising/distorsi ala alarm nyata
-    const osc1 = ctx.createOscillator();
-    const osc2 = ctx.createOscillator();
-    const gainNode = ctx.createGain();
+    const buatKetukan = (waktuMulai, frekuensi) => {
+        const osc = ctx.createOscillator();
+        const gainNode = ctx.createGain();
 
-    // Jenis gelombang agresif untuk menembus fokus manusia
-    osc1.type = "sawtooth"; 
-    osc2.type = "square"; 
+        osc.type = "sine"; // Tetap menggunakan sine wave agar suara bulat dan bersih
+        osc.frequency.setValueAtTime(frekuensi, ctx.currentTime + waktuMulai);
 
-    // Frekuensi dasar (Tinggi dan menusuk)
-    osc1.frequency.setValueAtTime(900, ctx.currentTime);
-    osc2.frequency.setValueAtTime(450, ctx.currentTime);
+        // Volume Envelope yang lebih tegas
+        gainNode.gain.setValueAtTime(0, ctx.currentTime + waktuMulai);
+        gainNode.gain.linearRampToValueAtTime(0.7, ctx.currentTime + waktuMulai + 0.03); // Naik ke 70% volume secara instan
+        gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + waktuMulai + 0.35); // Ekor suara sedikit lebih panjang (0.35s)
+
+        osc.connect(gainNode);
+        gainNode.connect(ctx.destination);
+
+        osc.start(ctx.currentTime + waktuMulai);
+        osc.stop(ctx.currentTime + waktuMulai + 0.35);
+    };
+
+    // Ketukan "Ti-" (Nada awal tegas)
+    buatKetukan(0.0, 932.33); // Frekuensi dinaikkan sedikit ke Bb5 agar lebih sadar/alerting
+
+    // Ketukan "-nut" (Jeda 0.18 detik, nada turun mantap)
+    buatKetukan(0.18, 783.99); // G5
     
-    // Modulasi Sirine Cepat (Efek Wi-Wu-Wi-Wu yang sangat cepat/agresif)
-    for (let i = 0; i < 3; i++) {
-        let timeOffset = i * 0.4;
-        osc1.frequency.linearRampToValueAtTime(1200, ctx.currentTime + timeOffset + 0.2);
-        osc1.frequency.linearRampToValueAtTime(800, ctx.currentTime + timeOffset + 0.4);
-        
-        osc2.frequency.linearRampToValueAtTime(600, ctx.currentTime + timeOffset + 0.2);
-        osc2.frequency.linearRampToValueAtTime(300, ctx.currentTime + timeOffset + 0.4);
-    }
+    // Ketukan "Ti-" (Nada awal tegas)
+    buatKetukan(0.40, 932.33); // Frekuensi dinaikkan sedikit ke Bb5 agar lebih sadar/alerting
 
-    // Naikkan volume ke tingkat siaga (0.6 = 60% volume)
-    gainNode.gain.setValueAtTime(0.6, ctx.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 1.5); // Efek memudar tajam di akhir
-
-    osc1.connect(gainNode);
-    osc2.connect(gainNode);
-    gainNode.connect(ctx.destination);
-
-    osc1.start();
-    osc2.start();
-    
-    osc1.stop(ctx.currentTime + 1.5);
-    osc2.stop(ctx.currentTime + 1.5);
+    // Ketukan "-nut" (Jeda 0.18 detik, nada turun mantap)
+    buatKetukan(0.58, 783.99); // G5
 }
